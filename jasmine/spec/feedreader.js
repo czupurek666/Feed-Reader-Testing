@@ -30,7 +30,8 @@ $(function() {
         it('URL is definied', function() {
             for (let feed of allFeeds) {
               expect(feed.url).toBeDefined();
-              expect(feed.url).not.toBe(0);
+              expect(feed.url.constructor).toBe(String);
+              expect(feed.url.length).not.toBe(0);
             }
         });
 
@@ -41,7 +42,8 @@ $(function() {
         it('name is definied', function() {
             for (let feed of allFeeds) {
               expect(feed.name).toBeDefined();
-              expect(feed.name).not.toBe(0);
+              expect(feed.name.constructor).toBe(String);
+              expect(feed.name.length).not.toBe(0);
             }
         });
     });
@@ -77,40 +79,41 @@ $(function() {
      * are loading corectly.
      */
     describe('Initial Entries', function() {
-        let feedContainer = $('.feed');
-        beforeEach(function(done) {
-            loadFeed(0,function(){
-        });
-        done();
-    });
+      beforeEach(function(done){
+        loadFeed(0,done);
+      });
+
+
         /* This test ensures that when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
          * Remember, loadFeed() is asynchronous so this test will require
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
-        it('after calling the loadFeed there is an entry in feed container', function(done){
-            expect(feedContainer).not.toBe(0);
-            done();
-        });
-    });
+        it('after calling the loadFeed there is an entry in feed container', function(){
+            const cont = document.querySelector('.feed');
+            expect(cont.children.length > 0).toBe(true);
+          });
+   });
 
     /* This suite test if the contet changes after loading feeds */
-    describe('New Feed Selection', function() {
+  describe('New Feed Selection', function() {
+        const cont = document.querySelector('.feed');
+        let firstFeed;
+        let secondFeed;
         /* This test ensures that when a new feed is loaded
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
-        beforeEach(function(done) {
-            loadFeed(0,function(){
-            });
-            loadFeed(1,function(){
-            });
-            done();
-        });
+         beforeEach(function(done){
+           loadFeed(0);
+           firstFeed = cont.children[0].innerText;
+           loadFeed(1,done);
+         });
 
-        it('after a new feed is loaded contents actually changes', function(){
-            expect(allFeeds[0].url).not.toBe(allFeeds[1].url);
+        it('after a new feed is loaded content actually changes', function(){
+          secondFeed = cont.children[0].innerText;
+          expect(firstFeed).not.toBe(secondFeed);
         });
-    });
+      });
 });

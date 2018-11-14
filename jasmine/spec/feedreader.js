@@ -58,8 +58,7 @@ $(function() {
          * hidden by default.
          */
         it('menu is hidden', function(){
-            let menuClass = $('body').class;
-            expect(menuClass).not.toBe(0);
+            expect($('body').hasClass('menu-hidden')).toBe(true);
         });
 
          /* This test ensures that the menu changes
@@ -91,14 +90,13 @@ $(function() {
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
         it('after calling the loadFeed there is an entry in feed container', function(){
-            const cont = $('.feed .feed-list');
+            const cont = $('.feed .entry');
             expect(cont.children.length > 0).toBe(true);
           });
    });
 
     /* This suite test if the contet changes after loading feeds */
   describe('New Feed Selection', function() {
-        const cont = document.querySelector('.feed');
         let firstFeed;
         let secondFeed;
         /* This test ensures that when a new feed is loaded
@@ -108,11 +106,9 @@ $(function() {
          beforeEach(function(done){
            loadFeed(0,function(){
              // feed 0 done loading
-             console.log($('.entry-link').html());
              firstFeed = $('.entry-link').html();
              loadFeed(1,function(){
                // feed 1 done loading
-               console.log($('.entry-link').html());
                secondFeed = $('.entry-link').html();
                // all variables initialized, can begin tests
                done();

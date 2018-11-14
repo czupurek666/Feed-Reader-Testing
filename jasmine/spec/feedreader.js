@@ -91,7 +91,7 @@ $(function() {
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
         it('after calling the loadFeed there is an entry in feed container', function(){
-            const cont = document.querySelector('.feed');
+            const cont = $('.feed .feed-list');
             expect(cont.children.length > 0).toBe(true);
           });
    });
@@ -106,13 +106,21 @@ $(function() {
          * Remember, loadFeed() is asynchronous.
          */
          beforeEach(function(done){
-           loadFeed(0);
-           firstFeed = cont.children[0].innerText;
-           loadFeed(1,done);
-         });
+           loadFeed(0,function(){
+             // feed 0 done loading
+             console.log($('.entry-link').html());
+             firstFeed = $('.entry-link').html();
+             loadFeed(1,function(){
+               // feed 1 done loading
+               console.log($('.entry-link').html());
+               secondFeed = $('.entry-link').html();
+               // all variables initialized, can begin tests
+               done();
+             });
+           });
+          });
 
         it('after a new feed is loaded content actually changes', function(){
-          secondFeed = cont.children[0].innerText;
           expect(firstFeed).not.toBe(secondFeed);
         });
       });
